@@ -15,57 +15,54 @@ def getCodeObjectName(co):
 	return text
 
 def __parseCodeObjectNode(xmlNode, co):
-	constsNode = ET.SubElement(xmlNode, "co_consts")
+	subNode = ET.SubElement(xmlNode, "co_consts")
 	for idx, const in enumerate(co.co_consts):
 		if type(const) == types.CodeType:
-			node_name = ET.SubElement(constsNode, "item")
-			node_name.attrib["name"] = getCodeObjectName(const)
-			node_name.attrib["type"] = "codeobject"
-			__parseCodeObjectNode(node_name, const)
+			itemNode = ET.SubElement(subNode, "item")
+			itemNode.attrib["name"] = getCodeObjectName(const)
+			itemNode.attrib["type"] = "codeobject"
+			__parseCodeObjectNode(itemNode, const)
 		else:
-			node_name = ET.SubElement(constsNode, "item")
-			node_name.text = str(const)
-		node_name.attrib['idx'] = str(idx)
-	constsNode.attrib["count"] = str(len(co.co_consts))
-
+			itemNode = ET.SubElement(subNode, "item")
+			itemNode.text = str(const)
+		itemNode.attrib['idx'] = str(idx)
+	subNode.attrib["count"] = str(len(co.co_consts))
 	
-	nameNode = ET.SubElement(xmlNode, "co_names")
+	subNode = ET.SubElement(xmlNode, "co_names")
 	for idx, name in enumerate(co.co_names):
-		node_name = ET.SubElement(nameNode, "name")
-		node_name.text = str(name)
-		node_name.attrib['idx'] = str(idx)
-	nameNode.attrib["count"] = str(len(co.co_names))
+		itemNode = ET.SubElement(subNode, "name")
+		itemNode.text = str(name)
+		itemNode.attrib['idx'] = str(idx)
+	subNode.attrib["count"] = str(len(co.co_names))
 
-
-	nameNode = ET.SubElement(xmlNode, "co_varnames")
+	subNode = ET.SubElement(xmlNode, "co_varnames")
 	for idx, name in enumerate(co.co_varnames):
-		node_name = ET.SubElement(nameNode, "name")
-		node_name.text = str(name)
-		node_name.attrib['idx'] = str(idx)
-	nameNode.attrib["count"] = str(len(co.co_varnames))
+		itemNode = ET.SubElement(subNode, "name")
+		itemNode.text = str(name)
+		itemNode.attrib['idx'] = str(idx)
+	subNode.attrib["count"] = str(len(co.co_varnames))
 
-	
-	nameNode = ET.SubElement(xmlNode, "co_filename")
-	nameNode.text = co.co_filename
+	subNode = ET.SubElement(xmlNode, "co_filename")
+	subNode.text = co.co_filename
 
-	nameNode = ET.SubElement(xmlNode, "co_ename")
-	nameNode.text = co.co_name
+	subNode = ET.SubElement(xmlNode, "co_ename")
+	subNode.text = co.co_name
 
-	nameNode = ET.SubElement(xmlNode, "co_nlocals")
-	nameNode.text = str(co.co_nlocals)
+	subNode = ET.SubElement(xmlNode, "co_nlocals")
+	subNode.text = str(co.co_nlocals)
 
-	nameNode = ET.SubElement(xmlNode, "co_stacksize")
-	nameNode.text = str(co.co_stacksize)
+	subNode = ET.SubElement(xmlNode, "co_stacksize")
+	subNode.text = str(co.co_stacksize)
 
-	nameNode = ET.SubElement(xmlNode, "co_argcount")
-	nameNode.text = str(co.co_argcount)
+	subNode = ET.SubElement(xmlNode, "co_argcount")
+	subNode.text = str(co.co_argcount)
 
 
 def parseCodeObjectNodeWithCo(co, xmlFilename):
-	root_name = ET.Element("codeobject")
-	__parseCodeObjectNode(root_name, co)
+	rootNode = ET.Element("codeobject")
+	__parseCodeObjectNode(rootNode, co)
 	
-	rough_string = ET.tostring(root_name, 'utf-8')
+	rough_string = ET.tostring(rootNode, 'utf-8')
 	reared_content = minidom.parseString(rough_string)
 	with open(xmlFilename, 'w') as fs:
 		reared_content.writexml(fs, addindent="    ", newl="\n", encoding="utf-8")
