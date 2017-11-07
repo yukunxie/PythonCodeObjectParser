@@ -7,20 +7,6 @@ import types
 import xml.etree.ElementTree as ET
 import xml.dom.minidom as minidom
 
-code = '''
-a = 10
-b = 20
-c = a + b
-def f(a):
-	def tes():
-		pass
-	z = 30
-	return z
-'''
-
-co = compile(code, "co.py", "exec")
-
-
 def getCodeObjectName(co):
 	"<code object f at 023E14A0,"
 	text = str(co)
@@ -82,7 +68,7 @@ def parseCodeObjectNodeWithCo(co, xmlFilename):
 	rough_string = ET.tostring(root_name, 'utf-8')
 	reared_content = minidom.parseString(rough_string)
 	with open(xmlFilename, 'w') as fs:
-		reared_content.writexml(fs, addindent=" ", newl="\n", encoding="utf-8")
+		reared_content.writexml(fs, addindent="    ", newl="\n", encoding="utf-8")
 
 
 def parseCodeObjectNodeWithCodeSnippet(codestring, xmlFilename):
@@ -96,5 +82,16 @@ def parseCodeObjectNodeWithPyFile(pyFilename, xmlFilename):
 		parseCodeObjectNodeWithCodeSnippet(text, xmlFilename)
 
 
-if __file__ == "__main__":
-	parseCodeObjectNodeWithPyFile(r"codeobject.py", "camera.xml")
+code = '''
+a = 10
+b = 20
+c = a + b
+def f(a):
+	def tes():
+		pass
+	z = 30
+	return z
+'''
+
+if __name__ == "__main__":
+	parseCodeObjectNodeWithPyFile(r"codeparser.py", "codeparser.xml")
